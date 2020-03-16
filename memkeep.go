@@ -12,7 +12,7 @@ type Keeper struct {
 	fileName     string
 	outputStruct interface{}
 	watcher      *fsnotify.Watcher
-	mu           *sync.Mutex
+	mu           *sync.RWMutex
 }
 
 func NewListener(jsonFileName string, outputStruct interface{}) *Keeper {
@@ -23,7 +23,7 @@ func NewListener(jsonFileName string, outputStruct interface{}) *Keeper {
 		fileName:     jsonFileName,
 		outputStruct: outputStruct,
 		watcher:      watcher,
-		mu:           new(sync.Mutex),
+		mu:           new(sync.RWMutex),
 	}
 }
 
@@ -83,5 +83,7 @@ func (k *Keeper) jsonFileToStruct(jsonFileName string, outputStruct interface{})
 }
 
 func (k *Keeper) Fetch() interface{} {
+	k.mu.RLock()
+	defer k.mu.RUnlock()
 	return k.outputStruct
 }
