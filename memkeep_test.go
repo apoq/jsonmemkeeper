@@ -50,7 +50,7 @@ func TestWatcher(t *testing.T) {
 		wg.Done()
 	}()
 	wg.Wait()
-	assrt.NotEqual(1001, testStruct.Count)
+	assrt.Equal(1001, testStruct.Count)
 }
 
 func incrementCounter(fileName string) {
